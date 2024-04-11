@@ -42,7 +42,7 @@ public class normalCards {
     private void setCoins() {
         for (int i = 0; i < coinNum; i++) {
             int coin = rand.nextInt(5);
-            if (coins[coin] < 4)
+            if (coins[coin] < 6)
                 coins[coin]++;
             else i--;
         }
