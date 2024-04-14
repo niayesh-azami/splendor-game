@@ -2,7 +2,7 @@ package Cards;
 
 import java.util.Random;
 
-public class normalCards {
+public class normalCard {
     Random rand = new Random();
 
     private final int level;
@@ -10,13 +10,15 @@ public class normalCards {
     private final int score;
     private final int specialCoin;
     private final int[] coins = new int[10];
+    private int position;
 
-    public normalCards(int level) {
+    public normalCard(int level) {
         this.level = level;
         score = setScore();
         coinNum = setCoinNum();
         specialCoin = setSpecialCoin();
         setCoins();
+        position = 0;
     }
 
     private int setScore() {
@@ -66,5 +68,9 @@ public class normalCards {
 
     public int[] getCoins() {
         return coins;
+    }
+
+    public int getInGame() {
+        return position;
     }
 }

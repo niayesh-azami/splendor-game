@@ -8,11 +8,13 @@ public class prizeClaw {
     private final int coinNum;
     private final int score;
     private final int[] coins = new int[10];
+    private int position;
 
     public prizeClaw() {
         score = setScore();
         coinNum = setCoinNum();
         setCoins();
+        position = 0;
     }
 
     private int setScore() {
