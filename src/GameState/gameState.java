@@ -14,9 +14,9 @@ public class gameState {
     private static int level1no, level2no, level3no;
     private int turnSW;
 
-    public void startTheGame(String player1, String player2) {
+    public void startTheGame(String player0, String player1) {
+        players[0] = new player(player0);
         players[1] = new player(player1);
-        players[2] = new player(player2);
         setSlotMachines();
         setNormalCards();
         turnSW = 0;

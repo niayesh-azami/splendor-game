@@ -14,7 +14,7 @@ public class prizeClaw {
         score = setScore();
         coinNum = setCoinNum();
         setCoins();
-        position = 0;
+        position = -1;
     }
 
     private int setScore() {

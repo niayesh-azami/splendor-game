@@ -22,4 +22,8 @@ public class player {
     public wallet getPlayerWallet() {
         return playerWallet;
     }
+
+    public int getScore() {
+        return score;
+    }
 }

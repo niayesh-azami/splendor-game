@@ -18,5 +18,9 @@ public class Main {
 
         parkGameState.startTheGame(player1name, player2name);
 
+        while(!((parkGameState.getPlayers(0).getScore() >= 15 ||
+                parkGameState.getPlayers(1).getScore() >= 15) && parkGameState.getTurnSW() == 0)) {
+            int choice = input.nextInt();
+        }
     }
 }

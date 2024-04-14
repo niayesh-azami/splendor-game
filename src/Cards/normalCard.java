@@ -18,7 +18,7 @@ public class normalCard {
         coinNum = setCoinNum();
         specialCoin = setSpecialCoin();
         setCoins();
-        position = 0;
+        position = -1;
     }
 
     private int setScore() {
