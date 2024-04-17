@@ -63,16 +63,16 @@ public class Main extends JFrame {
         player1Label.setHorizontalAlignment(JLabel.CENTER);
         player2Label.setHorizontalAlignment(JLabel.CENTER);
 
-        JTextField player1name = new JTextField("");
+        final JTextField[] player1name = {new JTextField("")};
         JTextField player2name = new JTextField("");
-        player1name.setActionCommand("p1");
+        player1name[0].setActionCommand("p1");
         player2name.setActionCommand("p2");
-        player1name.setHorizontalAlignment(JTextField.CENTER);
+        player1name[0].setHorizontalAlignment(JTextField.CENTER);
         player2name.setHorizontalAlignment(JTextField.CENTER);
 
         cntrPnl.add(player1Label);
         cntrPnl.add(player2Label);
-        cntrPnl.add(player1name);
+        cntrPnl.add(player1name[0]);
         cntrPnl.add(player2name);
         cntrPnl.add(textExp);
 
@@ -104,9 +104,9 @@ public class Main extends JFrame {
                 return true;
             }
         };
-        player1name.getDocument().addDocumentListener(typNAmeListener);
+        player1name[0].getDocument().addDocumentListener(typNAmeListener);
         player2name.getDocument().addDocumentListener(typNAmeListener);
-        player1name.getDocument().putProperty("name", "player1");
+        player1name[0].getDocument().putProperty("name", "player1");
         player2name.getDocument().putProperty("name", "player2");
 
         cntrPnl.setBorder(new EmptyBorder(180, 100, 230, 100));
