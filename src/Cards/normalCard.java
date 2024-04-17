@@ -11,6 +11,7 @@ public class normalCard {
     private final int specialCoin;
     private final int[] coins = new int[10];
     private int position;
+    private int reservedIn;
 
     public normalCard(int level) {
         this.level = level;
@@ -19,6 +20,7 @@ public class normalCard {
         specialCoin = setSpecialCoin();
         setCoins();
         position = -1;
+        reservedIn = -1;
     }
 
     private int setScore() {

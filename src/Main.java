@@ -2,11 +2,24 @@
 
 import GameState.gameState;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Scanner;
 
-public class Main {
+public class Main extends JFrame {
+
+    public Main() {
+        setSize(800, 800);
+        setLocationRelativeTo(null);
+        setTitle("Splendor Game");
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        setVisible(true);
+    }
 
     public static void main(String[] args) {
+
+        new Main();
 
         // if new game starts
         gameState parkGameState = new gameState();
