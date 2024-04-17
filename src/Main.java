@@ -14,7 +14,15 @@ public class Main extends JFrame {
         setTitle("Splendor Game");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        initTopPnl();
         setVisible(true);
+    }
+
+    private void initTopPnl() {
+        JPanel topPnl = new JPanel(new FlowLayout());
+        JToggleButton gameTyp = new JToggleButton("Game Type");
+        topPnl.add(gameTyp);
+        add(topPnl, BorderLayout.PAGE_START);
     }
 
     public static void main(String[] args) {
