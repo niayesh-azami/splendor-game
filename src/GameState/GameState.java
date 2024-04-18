@@ -3,9 +3,8 @@ package GameState;
 import Cards.normalCard;
 import Player.player;
 import SlotMachine.slotMachine;
-import Wallet.wallet;
 
-public class gameState {
+public class GameState {
     private final player[] players = new player[5];
     private final slotMachine[] slotsMachines = new slotMachine[6];
     private final normalCard[] level1cards = new normalCard[20];
