@@ -1,5 +1,13 @@
 import GameState.GameState;
 
 public class GameLogic {
-    GameState gameState = new GameState();
+    private GameState gameState = new GameState();
+
+    public GameLogic(String player1name, String player2name) {
+        gameState.startTheGame(player1name, player2name);
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
 }

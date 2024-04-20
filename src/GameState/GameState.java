@@ -56,4 +56,17 @@ public class GameState {
     public void changeTurnSW() {
         turnSW = 1 - turnSW;
     }
+
+    public int getCardsNo(int i) {
+        if (i == 1) return level1no;
+        if (i == 2) return level2no;
+        if (i == 3) return level3no;
+        return 0;
+    }
+
+    public normalCard getCard(int level, int i) {
+        if (level == 1) return level1cards[i];
+        if (level == 2) return level2cards[i];
+        return level3cards[i];
+    }
 }

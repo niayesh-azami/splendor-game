@@ -124,7 +124,7 @@ public class Main extends JFrame {
               if (e.getActionCommand().equals("start")) {
                   if (startBtn.isSelected() && checkNames()) {
                       setVisible(false);
-                      GameLogic gameBoard = new GameLogic();
+                      GameLogic gameBoard = new GameLogic(player1name, player2name);
                       GameGraphic gameGraphic = new GameGraphic(gameBoard);
                   }
               }
