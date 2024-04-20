@@ -1,4 +1,5 @@
 import Cards.normalCard;
+import Cards.prizeClaw;
 import GameState.GameState;
 
 import javax.swing.*;
@@ -35,12 +36,16 @@ public class GameGraphic extends JFrame {
     }
 
     private Color getColor(int color) {
+        if (color == -1) return new Color(255, 156, 106);
         if (color == 0) return new Color(176, 208, 159);
-        if (color == 1) return new Color(237, 237, 237);
+        if (color == 1) return new Color(206, 206, 206);
         if (color == 2) return new Color(198, 168, 218);
         if (color == 3) return new Color(157, 206, 218);
-        return new Color(246, 188, 188);
+        if (color == 4) return new Color(246, 188, 188);
+        return new Color(255, 234, 130);
     }
+
+
 
     @Override
     public void paint(Graphics g) {
@@ -50,29 +55,75 @@ public class GameGraphic extends JFrame {
 
         Rectangle recCard = new Rectangle(80, 120);
 
-        // showing level 3 cards
+        // drawing coins
+        for (int i = 0; i < 6; i++) {
+            if (game.getGameState().getSlotMachine(i).getCoinNum() > 0) {
+                g.setColor(getColor(i));
+                g.fillOval(590 + i * 80, 50, 50, 50);
+                g.setColor(Color.white);
+                g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+                g.drawString("" + game.getGameState().getSlotMachine(i).getCoinNum(), 590 + i * 80 + 17, 50 + 33);
+            }
+        }
+
+        // drawing initial cards
+        for (int i = 0; i < 3; i++) {
+            if (game.getGameState().getCardsNo(i + 1) > 0) {
+                g.setColor(getColor(5));
+                g.fillRect(500, 130 + i * (30 + recCard.height), 60, 90);
+                g.setColor(Color.white);
+                g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+                g.drawString("" + game.getGameState().getCardsNo(i + 1), 500 + 15, 130 + i * (30 + recCard.height) + 50);
+
+            }
+        }
+
+        // drawing level 3 cards
         for (int i = game.getGameState().getCardsNo(3) - 1, j = 0; i >= 0 && j < 4 ; i--, j++) {
             normalCard card = game.getGameState().getCard(3, i);
             g.setColor(getColor(card.getSpecialCoin()));
             g.fillRect(620 + j * (30 + recCard.width), 130, recCard.width, recCard.height);
-            if
+            if (card.getScore() > 0) {
+                g.setColor(Color.white);
+                g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+                g.drawString("" + card.getScore(), 620 + j * (30 + recCard.width) + 13, 130 + 30);
+            }
         }
 
-        // showing level 2 cards
+        // drawing level 2 cards
         for (int i = game.getGameState().getCardsNo(2) - 1, j = 0; i >= 0 && j < 4 ; i--, j++) {
             normalCard card = game.getGameState().getCard(2, i);
             g.setColor(getColor(card.getSpecialCoin()));
             g.fillRect(620 + j * (30 + recCard.width), 130 + 120 + 35, recCard.width, recCard.height);
+            if (card.getScore() > 0) {
+                g.setColor(Color.white);
+                g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+                g.drawString("" + card.getScore(), 620 + j * (30 + recCard.width) + 13, 130 + 120 + 35 + 30);
+            }
         }
 
-        // showing level 1 cards
+        // drawing level 1 cards
         for (int i = game.getGameState().getCardsNo(1) - 1, j = 0; i >= 0 && j < 4 ; i--, j++) {
             normalCard card = game.getGameState().getCard(1, i);
             g.setColor(getColor(card.getSpecialCoin()));
             g.fillRect(620 + j * (30 + recCard.width), 130 + 240 + 70, recCard.width, recCard.height);
+            if (card.getScore() > 0) {
+                g.setColor(Color.white);
+                g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+                g.drawString("" + card.getScore(), 620 + j * (30 + recCard.width) + 13, 130 + 240 + 70 + 30);
+            }
         }
-
-        g.fillOval(100, 100, 60, 60);
+        // drawing prize claws
+        for (int i = 0; i < game.getGameState().getPrizeClawNo(); i++) {
+            prizeClaw card = game.getGameState().getPrizeClaw(i);
+            g.setColor(getColor(-1));
+            g.fillRect(370, 130 + i * 150, 80,90);
+            if (card.getScore() > 0) {
+                g.setColor(Color.white);
+                g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+                g.drawString("" + card.getScore(), 370 + 13, 130 + i * 150 + 30);
+            }
+        }
     }
 
     public static void main(String[] args) {

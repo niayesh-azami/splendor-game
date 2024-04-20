@@ -1,6 +1,7 @@
 package GameState;
 
 import Cards.normalCard;
+import Cards.prizeClaw;
 import Player.player;
 import SlotMachine.slotMachine;
 
@@ -10,7 +11,8 @@ public class GameState {
     private final normalCard[] level1cards = new normalCard[20];
     private final normalCard[] level2cards = new normalCard[20];
     private final normalCard[] level3cards = new normalCard[20];
-    private static int level1no, level2no, level3no;
+    private final prizeClaw[] prizeClaws = new prizeClaw[5];
+    private static int level1no, level2no, level3no, prizeClawNo;
     private int turnSW;
 
     public void startTheGame(String player0, String player1) {
@@ -18,6 +20,7 @@ public class GameState {
         players[1] = new player(player1);
         setSlotMachines();
         setNormalCards();
+        setPrizeClaws();
         turnSW = 0;
     }
 
@@ -45,6 +48,12 @@ public class GameState {
         level3no = 15;
     }
 
+    private void setPrizeClaws() {
+        for (int i = 0; i < 3; i++)
+            prizeClaws[i] = new prizeClaw();
+        prizeClawNo = 3;
+    }
+
     public player getPlayers(int i) {
         return (i == 0? players[0] : players[1]);
     }
@@ -64,9 +73,21 @@ public class GameState {
         return 0;
     }
 
+    public int getPrizeClawNo() {
+        return prizeClawNo;
+    }
+
     public normalCard getCard(int level, int i) {
         if (level == 1) return level1cards[i];
         if (level == 2) return level2cards[i];
         return level3cards[i];
+    }
+
+    public slotMachine getSlotMachine(int i) {
+        return slotsMachines[i];
+    }
+
+    public prizeClaw getPrizeClaw(int i) {
+        return prizeClaws[i];
     }
 }

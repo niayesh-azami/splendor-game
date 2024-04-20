@@ -33,4 +33,8 @@ public class prizeClaw {
             else i--;
         }
     }
+
+    public int getScore() {
+        return score;
+    }
 }
