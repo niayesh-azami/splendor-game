@@ -37,4 +37,12 @@ public class prizeClaw {
     public int getScore() {
         return score;
     }
+
+    public int getCoinNum() {
+        return coinNum;
+    }
+
+    public int getCoins(int i) {
+        return coins[i];
+    }
 }

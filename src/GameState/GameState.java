@@ -21,7 +21,7 @@ public class GameState {
         setSlotMachines();
         setNormalCards();
         setPrizeClaws();
-        turnSW = 0;
+        turnSW = 1;
     }
 
     private void setSlotMachines() {
@@ -63,7 +63,7 @@ public class GameState {
     }
 
     public void changeTurnSW() {
-        turnSW = 1 - turnSW;
+        turnSW = 3 - turnSW;
     }
 
     public int getCardsNo(int i) {
@@ -81,6 +81,24 @@ public class GameState {
         if (level == 1) return level1cards[i];
         if (level == 2) return level2cards[i];
         return level3cards[i];
+    }
+
+    public void deleteCard(int level, int i) {
+        if (level == 1) {
+            for (int j = i + 1; j < level1no; j++)
+                level1cards[j - 1] = level1cards[j];
+            level1no--;
+        }
+        else if (level == 2) {
+            for (int j = i + 1; j < level2no; j++)
+                level2cards[j - 1] = level2cards[j];
+            level2no--;
+        }
+        else {
+            for (int j = i + 1; j < level3no; j++)
+                level3cards[j - 1] = level3cards[j];
+            level3no--;
+        }
     }
 
     public slotMachine getSlotMachine(int i) {

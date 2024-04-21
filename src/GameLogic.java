@@ -10,4 +10,10 @@ public class GameLogic {
     public GameState getGameState() {
         return gameState;
     }
+
+    public void buyCard(int level, int i) {
+        gameState.getPlayers(gameState.getTurnSW()).addCard(gameState.getCard(level, i));
+        gameState.deleteCard(level, i);
+        gameState.changeTurnSW();
+    }
 }
