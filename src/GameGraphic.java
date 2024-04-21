@@ -27,7 +27,7 @@ public class GameGraphic extends JFrame {
 
         setVisible(true);
 
-        addMouseMotionListener(new MouseAdapter() {
+        /*addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 System.out.println(e.getX());
@@ -35,7 +35,7 @@ public class GameGraphic extends JFrame {
                 curX = e.getX();
                 curY = e.getY();
             }
-        });
+        });*/
     }
 
     private Color getColor(int color) {
@@ -85,33 +85,50 @@ public class GameGraphic extends JFrame {
         for (int level = 1; level <= 3; level++)
             for (int i = game.getGameState().getCardsNo(level) - 1, j = 0; i >= 0 && j < 4 ; i--, j++) {
                 normalCard card = game.getGameState().getCard(level, i);
+                System.out.println(level + " , " + j + " , " + card.getCoinNum());
                 g.setColor(getColor(card.getSpecialCoin()));
                 g.fillRect(720 + j * (30 + recCard.width), 130 + (3 - level) * (recCard.height + 35), recCard.width, recCard.height);
                 if (card.getScore() > 0) {
                     g.setColor(Color.white);
                     g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
                     g.drawString("" + card.getScore(), 720 + j * (30 + recCard.width) + 13, 130 + (3 - level) * (recCard.height + 35) + 30);
+                }
 
-                    if (card.getCoins(0) > 0) {
-                        g.setColor(new Color(130, 180, 100));
-                        g.fillOval(720 + j * (30 + recCard.width) + 5, 130 + (3 - level) * (recCard.height + 35) + 120 - 25, 20, 20);
-                    }
-                    if (card.getCoins(1) > 0) {
-                        g.setColor(new Color(242, 242, 242));
-                        g.fillOval(720 + j * (30 + recCard.width) + 30, 130 + (3 - level) * (recCard.height + 35) + 120 - 25, 20, 20);
-                    }
-                    if (card.getCoins(2) > 0) {
-                        g.setColor(new Color(149, 94, 186));
-                        g.fillOval(720 + j * (30 + recCard.width) + 55, 130 + (3 - level) * (recCard.height + 35) + 120 - 25, 20, 20);
-                    }
-                    if (card.getCoins(3) > 0) {
-                        g.setColor(new Color(89, 171, 192));
-                        g.fillOval(720 + j * (30 + recCard.width) + 5, 130 + (3 - level) * (recCard.height + 35) + 120 - 50, 20, 20);
-                    }
-                    if (card.getCoins(4) > 0) {
-                        g.setColor(new Color(237, 120, 120));
-                        g.fillOval(720 + j * (30 + recCard.width) + 30, 130 + (3 - level) * (recCard.height + 35) + 120 - 50, 20, 20);
-                    }
+
+                if (card.getCoins(0) > 0) {
+                    g.setColor(new Color(130, 180, 100));
+                    g.fillOval(720 + j * (30 + recCard.width) + 5, 130 + (3 - level) * (recCard.height + 35) + 120 - 25, 20, 20);
+                    g.setColor(Color.white);
+                    g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                    g.drawString("" + card.getCoins(0), 720 + j * (30 + recCard.width) + 5 + 6, 130 + (3 - level) * (recCard.height + 35) + 120 - 25 + 15);
+                }
+                if (card.getCoins(1) > 0) {
+                    g.setColor(new Color(242, 242, 242));
+                    g.fillOval(720 + j * (30 + recCard.width) + 30, 130 + (3 - level) * (recCard.height + 35) + 120 - 25, 20, 20);
+                    g.setColor(Color.GRAY);
+                    g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                    g.drawString("" + card.getCoins(1), 720 + j * (30 + recCard.width) + 30 + 6, 130 + (3 - level) * (recCard.height + 35) + 120 - 25 + 15);
+                }
+                if (card.getCoins(2) > 0) {
+                    g.setColor(new Color(149, 94, 186));
+                    g.fillOval(720 + j * (30 + recCard.width) + 55, 130 + (3 - level) * (recCard.height + 35) + 120 - 25, 20, 20);
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                    g.drawString("" + card.getCoins(2), 720 + j * (30 + recCard.width) + 55 + 6, 130 + (3 - level) * (recCard.height + 35) + 120 - 25 + 15);
+                }
+                if (card.getCoins(3) > 0) {
+                    g.setColor(new Color(89, 171, 192));
+                    g.fillOval(720 + j * (30 + recCard.width) + 5, 130 + (3 - level) * (recCard.height + 35) + 120 - 50, 20, 20);
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                    g.drawString("" + card.getCoins(3), 720 + j * (30 + recCard.width) + 5 + 6, 130 + (3 - level) * (recCard.height + 35) + 120 - 50 + 15);
+                }
+                if (card.getCoins(4) > 0) {
+                    g.setColor(new Color(237, 120, 120));
+                    g.fillOval(720 + j * (30 + recCard.width) + 30, 130 + (3 - level) * (recCard.height + 35) + 120 - 50, 20, 20);
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                    g.drawString("" + card.getCoins(4), 720 + j * (30 + recCard.width) + 30 + 6, 130 + (3 - level) * (recCard.height + 35) + 120 - 50 + 15);
                 }
             }
 
