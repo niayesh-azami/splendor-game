@@ -55,7 +55,7 @@ public class GameState {
     }
 
     public player getPlayers(int i) {
-        return (i == 0? players[0] : players[1]);
+        return (i == 1? players[0] : players[1]);
     }
 
     public int getTurnSW() {

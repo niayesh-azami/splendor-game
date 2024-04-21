@@ -1,14 +1,19 @@
 package Player;
 
-import Wallet.wallet;
+import Wallet.Wallet;
 
 public class player {
     private int score = 0;
     private final String playerName;
-    private wallet playerWallet = new wallet();
+    private Wallet wallet = new Wallet();
 
     public player(String playerName) {
         this.playerName = playerName;
+        ///////////
+        for (int i = 0; i < 6; i++) {
+            wallet.addCoin(i);
+            wallet.addSpecialCoin(i);
+        }
     }
 
     public void addScore(int score) {
@@ -19,8 +24,8 @@ public class player {
         return playerName;
     }
 
-    public wallet getPlayerWallet() {
-        return playerWallet;
+    public Wallet getWallet() {
+        return wallet;
     }
 
     public int getScore() {

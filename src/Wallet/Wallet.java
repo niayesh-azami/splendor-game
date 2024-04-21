@@ -1,14 +1,14 @@
 package Wallet;
 
-public class wallet {
+public class Wallet {
     private int[] coins = new int[10];
     private int[] specialCoins = new int[10];
 
-    public void add(int coin) {
+    public void addCoin(int coin) {
         coins[coin]++;
     }
 
-    public void addSpecialCode(int coin) {
+    public void addSpecialCoin(int coin) {
         specialCoins[coin]++;
     }
 

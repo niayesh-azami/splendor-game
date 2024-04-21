@@ -68,8 +68,8 @@ public class normalCard {
         return specialCoin;
     }
 
-    public int[] getCoins() {
-        return coins;
+    public int getCoins(int i) {
+        return coins[i];
     }
 
     public int getInGame() {
