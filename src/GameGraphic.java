@@ -39,6 +39,7 @@ public class GameGraphic extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println(curX + " " + curY);
+
                 outerLoop :
                 for (int level = 1; level <= 3; level++)
                     for (int i = game.getGameState().getCardsNo(level) - 1, j = 0; i >= 0 && j < 4 ; i--, j++) {
@@ -49,12 +50,14 @@ public class GameGraphic extends JFrame {
                                 curY <= 130 + (3 - level) * (recCard.height + 35) + recCard.height) {
                             int ans = play(1);
                             if (ans != -1) {
-                                if (ans == 0) game.buyCard(level, i);
+                                if (ans == 0)
+                                    if (game.buyCard(level, i) == false) errorBuyCard();
                                 repaint();
                             }
                             break outerLoop;
                         }
                     }
+
             }
         });
     }
@@ -82,7 +85,6 @@ public class GameGraphic extends JFrame {
 
         }
         return -1;
-
     }
 
     private Color getColor(int color) {
@@ -123,10 +125,10 @@ public class GameGraphic extends JFrame {
             Rectangle recCard = new Rectangle(60, 90);
             if (game.getGameState().getCardsNo(level) > 0) {
                 g.setColor(getColor(5));
-                g.fillRect(600, 130 + (3 - level) * (30 + recCard.height), 60, 90);
+                g.fillRect(600, 130 + (3 - level) * (120 + 35), 60, 90);
                 g.setColor(Color.white);
                 g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
-                g.drawString("" + game.getGameState().getCardsNo(level), 600 + 15, 130 + (3 - level) * (30 + recCard.height) + 50);
+                g.drawString("" + game.getGameState().getCardsNo(level), 600 + 15, 130 + (3 - level) * (120 + 35) + 50);
             }
             else {
                 g.setColor(Color.white);
@@ -313,7 +315,6 @@ public class GameGraphic extends JFrame {
     }
 
     public static void main(String[] args) {
-
         GameLogic gameLogic = new GameLogic("player1", "player2");
         GameGraphic gameGraphic = new GameGraphic(gameLogic);
 
