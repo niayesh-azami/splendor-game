@@ -18,6 +18,7 @@ public class player {
         normalCardsNum = 0;
         reservedCardsNum = 0;
         prizeClawsNum = 0;
+        score = 0;
     }
 
     public void addScore(int score) {

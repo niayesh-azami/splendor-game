@@ -63,7 +63,8 @@ public class GameState {
     }
 
     public void changeTurnSW() {
-        turnSW = 3 - turnSW;
+        if (getPlayers(turnSW).getWallet().getAllCoinsNum() <= 10)
+            turnSW = 3 - turnSW;
     }
 
     public int getCardsNo(int i) {

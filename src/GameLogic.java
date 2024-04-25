@@ -18,13 +18,20 @@ public class GameLogic {
     public boolean getCoinFromSlotMachine(int coin, int amount) {
         if (gameState.getSlotMachine(coin).getCoinNum() == 0) return false;
 
-        getGameState().getSlotMachine(coin).takeCoin(amount);
+        gameState.getSlotMachine(coin).takeCoin(amount);
 
         player p = gameState.getPlayers(gameState.getTurnSW());
         p.getWallet().addCoin(coin, amount);
 
-        System.out.println("*** : " + p.getPlayerName() + " " + p.getWallet().getCoinNum(coin));
+        //System.out.println("*** : " + p.getPlayerName() + " " + p.getWallet().getCoinNum(coin));
         return true;
+    }
+
+    public void giveCoinToSlotMachine(int coin, int amount) {
+        gameState.getSlotMachine(coin).giveBackCoin(amount);
+
+        player p = gameState.getPlayers(gameState.getTurnSW());
+        p.getWallet().minusCoins(coin, amount);
     }
 
     public boolean buyCard(int level, int i) {

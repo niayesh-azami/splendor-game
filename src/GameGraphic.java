@@ -1,6 +1,7 @@
 import Cards.normalCard;
 import Cards.prizeClaw;
 import GameState.GameState;
+import Player.player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,33 +37,42 @@ public class GameGraphic extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //System.out.println(curX + " " + curY);
-
-                outerLoop:
-                for (int level = 1; level <= 3; level++)
-                    for (int i = game.getGameState().getCardsNo(level) - 1, j = 0; i >= 0 && j < 4; i--, j++) {
-                        Rectangle recCard = new Rectangle(80, 120);
-                        if (720 + j * (30 + recCard.width) <= curX &&
-                                curX <= 720 + j * (30 + recCard.width) + recCard.width &&
-                                130 + (3 - level) * (recCard.height + 35) <= curY &&
-                                curY <= 130 + (3 - level) * (recCard.height + 35) + recCard.height) {
-                            int ans = play(1);
-                            if (ans != -1) {
-                                if (ans == 0)
-                                    if (!game.buyCard(level, i)) {
-                                        invalidMove();
-                                        repaint();
-                                    }
-                                if (ans == 1) game.holdCard(level, i);
-                                repaint();
+                if (game.getGameState().getPlayers(game.getGameState().getTurnSW()).getWallet().getAllCoinsNum() > 10)
+                    play(-1);
+                else {
+                    outerLoop:
+                    for (int level = 1; level <= 3; level++)
+                        for (int i = game.getGameState().getCardsNo(level) - 1, j = 0; i >= 0 && j < 4; i--, j++) {
+                            Rectangle recCard = new Rectangle(80, 120);
+                            if (720 + j * (30 + recCard.width) <= curX &&
+                                    curX <= 720 + j * (30 + recCard.width) + recCard.width &&
+                                    130 + (3 - level) * (recCard.height + 35) <= curY &&
+                                    curY <= 130 + (3 - level) * (recCard.height + 35) + recCard.height) {
+                                int ans = play(1);
+                                if (ans != -1) {
+                                    if (ans == 0)
+                                        if (!game.buyCard(level, i)) {
+                                            invalidMove();
+                                            repaint();
+                                        }
+                                    if (ans == 1) game.holdCard(level, i);
+                                    repaint();
+                                }
+                                break outerLoop;
                             }
-                            break outerLoop;
                         }
-                    }
 
-                System.out.println(curX + " " + curY);
-                if (690 <= curX && curX <= 690 + 4 * 80 && 50 <= curY && curY <= 100) {
-                    play(0);
-                    repaint();
+                    //System.out.println(curX + " " + curY);
+                    if (690 <= curX && curX <= 690 + 4 * 80 && 50 <= curY && curY <= 100) {
+                        play(0);
+                        repaint();
+                    }
+                }
+
+                if ((game.getGameState().getPlayers(1).getScore() >= 15 || game.getGameState().getPlayers(2).getScore() >= 15)
+                        && game.getGameState().getTurnSW() == 2) {
+                    setVisible(false);
+                    endingScreen Screen = new endingScreen(game.getGameState());
                 }
             }
         });
@@ -75,6 +85,114 @@ public class GameGraphic extends JFrame {
     }
 
     private int play(int i) {
+
+        if (i == -1) {
+            ///// check if the coins are more than 10
+            player p = game.getGameState().getPlayers(game.getGameState().getTurnSW());
+
+            if (p.getWallet().getAllCoinsNum() > 10) {
+                System.out.println("here 1");
+
+                JFrame f;
+                JPanel p1 = new JPanel();
+
+                f = new JFrame("choosing coins");
+                f.setLocationRelativeTo(null);
+                f.setSize(400, 120);
+                f.setLayout(new BorderLayout());
+
+                // create buttons
+                JToggleButton[] coinsButtons = new JToggleButton[5];
+                coinsButtons[0] = new JToggleButton("Green");
+                coinsButtons[1] = new JToggleButton("Gray");
+                coinsButtons[2] = new JToggleButton("Purple");
+                coinsButtons[3] = new JToggleButton("Blue");
+                coinsButtons[4] = new JToggleButton("Red");
+
+                coinsButtons[0].setActionCommand("green");
+                coinsButtons[1].setActionCommand("gray");
+                coinsButtons[2].setActionCommand("purple");
+                coinsButtons[3].setActionCommand("blue");
+                coinsButtons[4].setActionCommand("red");
+
+                boolean[] finalSelectedCoins = new boolean[5];
+
+                // add checkbox to panel
+                for (int j = 0; j < 5; j++)
+                    if (p.getWallet().getCoinNum(j) > 0)
+                        p1.add(coinsButtons[j]);
+
+                ActionListener selectedCoinsToRemove = new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (e.getActionCommand().equals("green")) {
+                            if (coinsButtons[0].isSelected())
+                                finalSelectedCoins[0] = true;
+                            else finalSelectedCoins[0] = false;
+                        } else if (e.getActionCommand().equals("gray")) {
+                            if (coinsButtons[1].isSelected())
+                                finalSelectedCoins[1] = true;
+                            else finalSelectedCoins[1] = false;
+                        } else if (e.getActionCommand().equals("purple")) {
+                            if (coinsButtons[2].isSelected())
+                                finalSelectedCoins[2] = true;
+                            else finalSelectedCoins[2] = false;
+                        } else if (e.getActionCommand().equals("blue")) {
+                            if (coinsButtons[3].isSelected())
+                                finalSelectedCoins[3] = true;
+                            else finalSelectedCoins[3] = false;
+                        } else {
+                            if (coinsButtons[4].isSelected())
+                                finalSelectedCoins[4] = true;
+                            else finalSelectedCoins[4] = false;
+                        }
+                    }
+                };
+
+                for (int j = 0; j < 5; j++)
+                    coinsButtons[j].addActionListener(selectedCoinsToRemove);
+
+                f.add(p1, BorderLayout.CENTER);
+
+                ////////////// endPage
+                JToggleButton okayButton = new JToggleButton("okay");
+                okayButton.setActionCommand("okay");
+                okayButton.setSelected(false);
+
+                ActionListener finishedSelectingToRemove = new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (e.getActionCommand().equals("okay")) {
+                            if (okayButton.isSelected()) {
+
+                                int selectedCoinsNum = 0;
+                                boolean check = true;
+
+                                for (int j = 0; j < 5; j++)
+                                    if (finalSelectedCoins[j] == true)
+                                        selectedCoinsNum++;
+
+                                if (p.getWallet().getAllCoinsNum() - selectedCoinsNum <= 10) {
+                                    f.setVisible(false);
+                                    for (int j = 0; j < 5; j++)
+                                        if (finalSelectedCoins[j])
+                                            game.giveCoinToSlotMachine(j, 1);
+                                    game.getGameState().changeTurnSW();
+                                    repaint();
+                                }
+                            }
+                        }
+                    }
+                };
+                okayButton.addActionListener(finishedSelectingToRemove);
+                f.add(okayButton, BorderLayout.PAGE_END);
+
+                f.setVisible(true);
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////
+
         if (i == 0) { // getting coins
             String[] options = new String[]{"2 coins", "3 coins"};
             int ans = JOptionPane.showOptionDialog(this, "2 coins from 1 slot machine or 3 from 3 different slot machines?",
@@ -121,7 +239,8 @@ public class GameGraphic extends JFrame {
 
                 // add checkbox to panel
                 for (int j = 0; j < 5; j++)
-                    p1.add(coinsButtons[j]);
+                    if (game.getGameState().getSlotMachine(j).getCoinNum() > 0)
+                        p1.add(coinsButtons[j]);
 
                 boolean[] finalSelectedCoins = new boolean[5];
 
