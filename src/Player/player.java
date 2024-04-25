@@ -43,6 +43,11 @@ public class player {
         score += card.getScore();
     }
 
+    public void holdCard(normalCard card) {
+        reservedCards[reservedCardsNum] = card;
+        reservedCardsNum++;
+    }
+
     public void addNormalCardsNum(int normalCardsNum) {
         normalCardsNum++;
     }

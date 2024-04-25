@@ -14,8 +14,12 @@ public class Wallet {
         specialCoins[coin]++;
     }
 
-    public void minus(int coin, int amount) {
-        coins[coin] = max(0, coins[coin] - amount);
+    public void minusCoins(int coin, int amount) {
+        if (amount > specialCoins[coin]) {
+            amount -= specialCoins[coin];
+            if (amount <= coins[coin]) coins[coin] -= amount;
+            else coins[coin] = 0;
+        }
     }
 
     public int getCoinNum(int coin) {

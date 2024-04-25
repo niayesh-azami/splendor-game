@@ -4,10 +4,7 @@ import GameState.GameState;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
@@ -38,11 +35,11 @@ public class GameGraphic extends JFrame {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println(curX + " " + curY);
+                //System.out.println(curX + " " + curY);
 
-                outerLoop :
+                outerLoop:
                 for (int level = 1; level <= 3; level++)
-                    for (int i = game.getGameState().getCardsNo(level) - 1, j = 0; i >= 0 && j < 4 ; i--, j++) {
+                    for (int i = game.getGameState().getCardsNo(level) - 1, j = 0; i >= 0 && j < 4; i--, j++) {
                         Rectangle recCard = new Rectangle(80, 120);
                         if (720 + j * (30 + recCard.width) <= curX &&
                                 curX <= 720 + j * (30 + recCard.width) + recCard.width &&
@@ -51,21 +48,156 @@ public class GameGraphic extends JFrame {
                             int ans = play(1);
                             if (ans != -1) {
                                 if (ans == 0)
-                                    if (game.buyCard(level, i) == false) errorBuyCard();
+                                    if (!game.buyCard(level, i)) {
+                                        invalidMove();
+                                        repaint();
+                                    }
+                                if (ans == 1) game.holdCard(level, i);
                                 repaint();
                             }
                             break outerLoop;
                         }
                     }
 
+                System.out.println(curX + " " + curY);
+                if (690 <= curX && curX <= 690 + 4 * 80 && 50 <= curY && curY <= 100) {
+                    play(0);
+                    repaint();
+                }
             }
         });
     }
 
+    private void invalidMove() {
+        String[] options = new String[]{"okay"};
+        JOptionPane.showOptionDialog(this, "invalid move!",
+                "!", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+    }
+
     private int play(int i) {
         if (i == 0) { // getting coins
+            String[] options = new String[]{"2 coins", "3 coins"};
+            int ans = JOptionPane.showOptionDialog(this, "2 coins from 1 slot machine or 3 from 3 different slot machines?",
+                    "?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
+            if (ans == 0) {
+                boolean check = false;
+                for (int j = 0; j < 5; j++)
+                    if (game.getGameState().getSlotMachine(j).getCoinNum() == 4)
+                        check = true;
+                if (!check) invalidMove();
+                else {
+                    String[] optionsForCoins = new String[]{"green", "gray", "purple", "blue", "red"};
+                    int coin = JOptionPane.showOptionDialog(this, "which coins?",
+                            "?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, optionsForCoins, optionsForCoins[0]);
+                    if (coin != -1) {
+                        if (game.getGameState().getSlotMachine(coin).getCoinNum() != 4) invalidMove();
+                        else if (!game.getCoinFromSlotMachine(coin, 2)) invalidMove();
+                        else game.getGameState().changeTurnSW();
+                    }
+                }
+            } else if (ans == 1) {
+                JFrame f;
+                JPanel p1 = new JPanel();
+
+                f = new JFrame("choosing coins");
+                f.setLocationRelativeTo(null);
+                f.setSize(400, 120);
+                f.setLayout(new BorderLayout());
+
+                // create buttons
+                JToggleButton[] coinsButtons = new JToggleButton[5];
+                coinsButtons[0] = new JToggleButton("Green");
+                coinsButtons[1] = new JToggleButton("Gray");
+                coinsButtons[2] = new JToggleButton("Purple");
+                coinsButtons[3] = new JToggleButton("Blue");
+                coinsButtons[4] = new JToggleButton("Red");
+
+                coinsButtons[0].setActionCommand("green");
+                coinsButtons[1].setActionCommand("gray");
+                coinsButtons[2].setActionCommand("purple");
+                coinsButtons[3].setActionCommand("blue");
+                coinsButtons[4].setActionCommand("red");
+
+                // add checkbox to panel
+                for (int j = 0; j < 5; j++)
+                    p1.add(coinsButtons[j]);
+
+                boolean[] finalSelectedCoins = new boolean[5];
+
+                ActionListener selectedCoins = new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (e.getActionCommand().equals("green")) {
+                            if (coinsButtons[0].isSelected())
+                                finalSelectedCoins[0] = true;
+                            else finalSelectedCoins[0] = false;
+                        } else if (e.getActionCommand().equals("gray")) {
+                            if (coinsButtons[1].isSelected())
+                                finalSelectedCoins[1] = true;
+                            else finalSelectedCoins[1] = false;
+                        } else if (e.getActionCommand().equals("purple")) {
+                            if (coinsButtons[2].isSelected())
+                                finalSelectedCoins[2] = true;
+                            else finalSelectedCoins[2] = false;
+                        } else if (e.getActionCommand().equals("blue")) {
+                            if (coinsButtons[3].isSelected())
+                                finalSelectedCoins[3] = true;
+                            else finalSelectedCoins[3] = false;
+                        } else {
+                            if (coinsButtons[4].isSelected())
+                                finalSelectedCoins[4] = true;
+                            else finalSelectedCoins[4] = false;
+                        }
+                    }
+                };
+
+                for (int j = 0; j < 5; j++)
+                    coinsButtons[j].addActionListener(selectedCoins);
+
+                f.add(p1, BorderLayout.CENTER);
+
+                ////////////// endPage
+                JToggleButton okayButton = new JToggleButton("okay");
+                okayButton.setActionCommand("okay");
+
+                ActionListener finishedSelecting = new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (e.getActionCommand().equals("okay")) {
+                            if (okayButton.isSelected()) {
+                                f.setVisible(false);
+
+                                int selectedCoinsNum = 0;
+                                boolean check = true;
+
+                                for (int j = 0; j < 5; j++)
+                                    if (finalSelectedCoins[j] == true)
+                                        selectedCoinsNum++;
+
+                                for (int j = 0; j < 5; j++)
+                                    if (finalSelectedCoins[j] && game.getGameState().getSlotMachine(j).getCoinNum() == 0)
+                                        check = false;
+
+                                if (selectedCoinsNum != 3 || check == false) invalidMove();
+                                else {
+                                    for (int j = 0; j < 5; j++)
+                                        if (finalSelectedCoins[j])
+                                            game.getCoinFromSlotMachine(j, 1);
+                                    game.getGameState().changeTurnSW();
+                                    repaint();
+                                }
+                            }
+                        }
+                    }
+                };
+                okayButton.addActionListener(finishedSelecting);
+                f.add(okayButton, BorderLayout.PAGE_END);
+
+                f.setVisible(true);
+            }
         }
+
 
         else if (i == 1) {
             if (game.getGameState().getPlayers(game.getGameState().getTurnSW()).getReservedCardsNum() < 3) {
@@ -96,8 +228,6 @@ public class GameGraphic extends JFrame {
         if (color == 4) return new Color(246, 188, 188);
         return new Color(255, 234, 130);
     }
-
-
 
     @Override
     public void paint(Graphics g) {
@@ -142,7 +272,6 @@ public class GameGraphic extends JFrame {
                 Rectangle recCard = new Rectangle(80, 120);
                 if (i >= 0) {
                     normalCard card = game.getGameState().getCard(level, i);
-                    System.out.println(level + " , " + j + " , " + card.getCoinNum());
                     g.setColor(getColor(card.getSpecialCoin()));
                     g.fillRect(720 + j * (30 + recCard.width), 130 + (3 - level) * (recCard.height + 35), recCard.width, recCard.height);
                     if (card.getScore() > 0) {
@@ -276,19 +405,19 @@ public class GameGraphic extends JFrame {
         g.drawString("" + game.getGameState().getPlayers(2).getScore(), 300, 335);
 
 
-        // drawing coins
+        // drawing players' coins
         for (int player = 1; player <= 2; player++)
             for (int i = 0; i < 6; i++) {
                 if (game.getGameState().getPlayers(player).getWallet().getCoinNum(i) > 0) {
                     g.setColor(getColor(i));
-                    g.fillOval(40 + i * 50, 110 + player * 255, 30, 30);
+                    g.fillOval(40 + i * 50, 110 + (player - 1) * 255, 30, 30);
                     g.setColor(Color.WHITE);
                     g.setFont(new Font("TimesRoman", Font.PLAIN, 22));
-                    g.drawString("" + game.getGameState().getPlayers(1).getWallet().getCoinNum(i), 40 + 9 + i * 50, 110 + player * 255 + 23);
+                    g.drawString("" + game.getGameState().getPlayers(player).getWallet().getCoinNum(i), 40 + 9 + i * 50, 110 + (player - 1) * 255 + 23);
                 }
                 else {
                     g.setColor(Color.white);
-                    g.fillOval(40 + i * 50, 110 + player * 255, 30, 30);
+                    g.fillOval(40 + i * 50, 110 + (player - 1) * 255, 30, 30);
                 }
             }
 
@@ -317,6 +446,5 @@ public class GameGraphic extends JFrame {
     public static void main(String[] args) {
         GameLogic gameLogic = new GameLogic("player1", "player2");
         GameGraphic gameGraphic = new GameGraphic(gameLogic);
-
     }
 }

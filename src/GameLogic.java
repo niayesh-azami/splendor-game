@@ -15,6 +15,18 @@ public class GameLogic {
         return gameState;
     }
 
+    public boolean getCoinFromSlotMachine(int coin, int amount) {
+        if (gameState.getSlotMachine(coin).getCoinNum() == 0) return false;
+
+        getGameState().getSlotMachine(coin).takeCoin(amount);
+
+        player p = gameState.getPlayers(gameState.getTurnSW());
+        p.getWallet().addCoin(coin, amount);
+
+        System.out.println("*** : " + p.getPlayerName() + " " + p.getWallet().getCoinNum(coin));
+        return true;
+    }
+
     public boolean buyCard(int level, int i) {
 
         int neededGoldCoins = 0;
@@ -22,20 +34,32 @@ public class GameLogic {
         normalCard card = gameState.getCard(level, i);
 
         for (int j = 0; j < 5; j++)
-            neededGoldCoins += max(0, card.getCoins(j) - p.getWallet().getCoinNum(j));
+            if (card.getCoins(j) > p.getWallet().getSpecialCoinNum(j) + p.getWallet().getCoinNum(j))
+                neededGoldCoins += card.getCoins(j) - p.getWallet().getCoinNum(j) - p.getWallet().getSpecialCoinNum(j);
 
         if (neededGoldCoins <= p.getWallet().getCoinNum(5)) {
-            p.addCard(gameState.getCard(level, i));
+            p.addCard(card);
             gameState.deleteCard(level, i);
 
             for (int j = 0; j < 5; j++)
-                p.getWallet().minus(j, card.getCoins(j));
+                p.getWallet().minusCoins(j, card.getCoins(j));
 
-            p.getWallet().minus(5, neededGoldCoins);
+            p.getWallet().minusCoins(5, neededGoldCoins);
 
             gameState.changeTurnSW();
-
             return true;
         } else return false;
+    }
+
+    public void holdCard(int level, int i) {
+        ;
+        player p = gameState.getPlayers(gameState.getTurnSW());
+        normalCard card = gameState.getCard(level, i);
+        System.out.println(p.getPlayerName());
+        p.getWallet().addCoin(5, 1);
+        p.holdCard(card);
+        gameState.deleteCard(level, i);
+
+        gameState.changeTurnSW();
     }
 }
