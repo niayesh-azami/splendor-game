@@ -62,10 +62,30 @@ public class GameGraphic extends JFrame {
                             }
                         }
 
-                    //System.out.println(curX + " " + curY);
-                    if (690 <= curX && curX <= 690 + 4 * 80 && 50 <= curY && curY <= 100) {
+                    if (690 <= curX && curX <= 690 + 5 * 80 && 50 <= curY && curY <= 100) {
                         play(0);
                         repaint();
+                    }
+
+                    if (game.getGameState().getTurnSW() == 1) {
+                        for (int i = 0; i < game.getGameState().getPlayers(1).getReservedCardsNum(); i++) {
+                            Rectangle recCard = new Rectangle(80, 120);
+                            if (-690 + 720 + i * (10 + recCard.width) <= curX && curX <= -690 + 720 + i * (10 + recCard.width) + recCard.width
+                                    && 160 + (1 - 1) * 255 + 20 + 10 <= curY && curY <= 160 + (1 - 1) * 255 + recCard.height + 10) {
+                                curX = i;
+                                play(2);
+                                repaint();
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < game.getGameState().getPlayers(2).getReservedCardsNum(); i++) {
+                            Rectangle recCard = new Rectangle(80, 120);
+                            if (-690 + 720 + i * (10 + recCard.width) <= curX && curX <= -690 + 720 + i * (10 + recCard.width) + recCard.width
+                                    && 160 + (2 - 1) * 255 + 20 + 10 <= curY && curY <= 160 + (2 - 1) * 255 + recCard.height + 10) {
+                                curX = i;
+                                play(2);
+                            }
+                        }
                     }
                 }
 
@@ -191,7 +211,6 @@ public class GameGraphic extends JFrame {
             }
         }
 
-        /////////////////////////////////////////////////////////////////////////////////
 
         if (i == 0) { // getting coins
             String[] options = new String[]{"2 coins", "3 coins"};
@@ -330,11 +349,19 @@ public class GameGraphic extends JFrame {
                         "?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             }
 
+        } else if (i == 2) {
+            System.out.println("here");
+            String[] options = new String[]{"buy"};
+            int ans1 = JOptionPane.showOptionDialog(this, "what do you want to do with this card?!",
+                    "?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (ans1 == 0) {
+                int whoIsPlaying = game.getGameState().getTurnSW();
+                boolean ans = game.buyReservedCard(whoIsPlaying, curX);
+                if (!ans) invalidMove();
+            }
+            repaint();
         }
 
-        else {
-
-        }
         return -1;
     }
 
@@ -442,8 +469,8 @@ public class GameGraphic extends JFrame {
             }
 
         // drawing prize claws
-        for (int i =  game.getGameState().getPrizeClawNo() - 1, j = 0; j < 3; i--, j++) {
-            if (i >= 0) {
+        for (int i = 0, j = 0; j < 3; i++, j++) {
+            if (i < game.getGameState().getPrizeClawNo()) {
                 prizeClaw card = game.getGameState().getPrizeClaw(i);
                 g.setColor(getColor(-1));
                 Rectangle recCard = new Rectangle(80, 90);
@@ -546,19 +573,88 @@ public class GameGraphic extends JFrame {
             for (int i = 0; i < 6; i++) {
                 if (game.getGameState().getPlayers(player).getWallet().getSpecialCoinNum(i) > 0) {
                     g.setColor(getColor(i));
-                    g.fillRect(40 + i * 50, 160 + (player - 1) * 255, 30, 45);
+                    g.fillRect(40 + i * 50, 160 + (player - 1) * 255 - 15, 30, 30);
                     if (i != 5) {
                         g.setColor(Color.WHITE);
                         g.setFont(new Font("TimesRoman", Font.PLAIN, 22));
-                        g.drawString("" + game.getGameState().getPlayers(player).getWallet().getSpecialCoinNum(i), 40 + 9 + i * 50, 160 + (player - 1) * 255 + 30);
+                        g.drawString("" + game.getGameState().getPlayers(player).getWallet().getSpecialCoinNum(i), 40 + 9 + i * 50, 160 + (player - 1) * 255 + 30 - 7 - 15);
                     }
                 }
                 else {
                     g.setColor(Color.white);
-                    g.fillRect(40 + i * 50, 160 + (player - 1) * 255, 30, 45);
+                    g.fillRect(40 + i * 50, 160 + (player - 1) * 255, 30, 30);
                 }
             }
 
+        // drawing reserved cards
+        for (int player = 1; player <= 2; player++)
+            for (int i = 0, j = 0; j < 3; i++, j++) {
+                Rectangle recCard = new Rectangle(80, 120);
+
+                if (i < game.getGameState().getPlayers(player).getReservedCardsNum()) {
+                    normalCard card = game.getGameState().getPlayers(player).getReservedCards()[i];
+                    g.setColor(getColor(card.getSpecialCoin()));
+                    //g.fillRect(720 + j * (30 + recCard.width), 130 + (3 - level) * (recCard.height + 35), recCard.width, recCard.height);
+                    g.fillRect(-690 + 720 + i * (10 + recCard.width), 160 + (player - 1) * 255 + 20 + 10, recCard.width, recCard.height - 20);
+
+                    if (card.getScore() > 0) {
+                        g.setColor(Color.white);
+                        g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+                        g.drawString("" + card.getScore(), -690 + 720 + i * (10 + recCard.width) + 13, 160 + (player - 1) * 255 + 30 + 20 + 10);
+                    }
+
+                    if (card.getCoins(0) > 0) {
+                        g.setColor(new Color(130, 180, 100));
+                        g.fillOval(-690 + 720 + i * (10 + recCard.width) + 5, 160 + (player - 1) * 255 + 120 - 25 + 10, 20, 20);
+                        g.setColor(Color.white);
+                        g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                        g.drawString("" + card.getCoins(0), -690 + 720 + i * (10 + recCard.width) + 5 + 6, 160 + (player - 1) * 255 + 120 - 25 + 15 + 10);
+                    }
+
+                    if (card.getCoins(1) > 0) {
+                        g.setColor(new Color(242, 242, 242));
+                        g.fillOval(-690 + 720 + i * (10 + recCard.width) + 30, 10 + 160 + (player - 1) * 255 + 120 - 25, 20, 20);
+                        g.setColor(Color.GRAY);
+                        g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                        g.drawString("" + card.getCoins(1), -690 + 720 + i * (10 + recCard.width) + 30 + 6, 10 + 160 + (player - 1) * 255 + 120 - 25 + 15);
+                    }
+                    if (card.getCoins(2) > 0) {
+                        g.setColor(new Color(149, 94, 186));
+                        g.fillOval(-690 + 720 + i * (10 + recCard.width) + 55, 10 + 160 + (player - 1) * 255 + 120 - 25, 20, 20);
+                        g.setColor(Color.WHITE);
+                        g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                        g.drawString("" + card.getCoins(2), -690 + 720 + i * (10 + recCard.width) + 55 + 6, 10 + 160 + (player - 1) * (255) + 120 - 25 + 15);
+                    }
+                    if (card.getCoins(3) > 0) {
+                        g.setColor(new Color(89, 171, 192));
+                        g.fillOval(-690 + 720 + i * (10 + recCard.width) + 5, 10 + 160 + (player - 1) * 255 + 120 - 50, 20, 20);
+                        g.setColor(Color.WHITE);
+                        g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                        g.drawString("" + card.getCoins(3), -690 + 720 + i * (10 + recCard.width) + 5 + 6, 10 + 160 + (player - 1) * 255 + 120 - 50 + 15);
+                    }
+                    if (card.getCoins(4) > 0) {
+                        g.setColor(new Color(237, 120, 120));
+                        g.fillOval(-690 + 720 + i * (10 + recCard.width) + 30, 10 + 160 + (player - 1) * 255 + 120 - 50, 20, 20);
+                        g.setColor(Color.WHITE);
+                        g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+                        g.drawString("" + card.getCoins(4), -690 + 720 + i * (10 + recCard.width) + 30 + 6, 10 + 160 + (player - 1) * 255 + 120 - 50 + 15);
+                    }
+                } else {
+                    g.setColor(Color.white);
+                    g.fillRect(-690 + 720 + i * (10 + recCard.width), 160 + (player - 1) * 255 + 20 + 10, recCard.width, recCard.height - 20);
+                }
+            }
+
+        // drawing players' prize claw
+        for (int player = 1; player <= 2; player++) {
+            Player.player p = game.getGameState().getPlayers(player);
+            for (int i = 0; i < p.getPrizeClawsNum(); i++) {
+                Rectangle recCard = new Rectangle(30, 40);
+                g.setColor(getColor(-1));
+                g.fillRect(350, 110 + (player - 1) * 255 + i * 60, recCard.width, recCard.height);
+            }
+
+        }
 
     }
 

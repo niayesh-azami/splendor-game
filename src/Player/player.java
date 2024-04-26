@@ -44,6 +44,12 @@ public class player {
         score += card.getScore();
     }
 
+    public void addPrizeClaw(prizeClaw card) {
+        prizeClaws[prizeClawsNum] = card;
+        prizeClawsNum++;
+        score += card.getScore();
+    }
+
     public void holdCard(normalCard card) {
         reservedCards[reservedCardsNum] = card;
         reservedCardsNum++;
@@ -60,6 +66,11 @@ public class player {
     public void addReservedCardsNum() {
         reservedCardsNum++;
     }
+
+    public void minusReservedCardNum() {
+        reservedCardsNum--;
+    }
+
     public int getReservedCardsNum() {
         return reservedCardsNum;
     }
@@ -70,5 +81,9 @@ public class player {
 
     public int getPrizeClawsNum() {
         return prizeClawsNum;
+    }
+
+    public normalCard[] getReservedCards() {
+        return reservedCards;
     }
 }

@@ -77,7 +77,7 @@ public class Main extends JFrame {
         cntrPnl.add(player2nameTxt);
         cntrPnl.add(textExp);
 
-        DocumentListener typNAmeListener = new DocumentListener() {
+        /*DocumentListener typNAmeListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 try {
@@ -90,23 +90,13 @@ public class Main extends JFrame {
 
             }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-
             public boolean isValid(String name) {
                 if (name.length() < 4) return false;
                 return true;
             }
-        };
-        player1nameTxt.getDocument().addDocumentListener(typNAmeListener);
-        player2nameTxt.getDocument().addDocumentListener(typNAmeListener);
+        };*/
+        //player1nameTxt.getDocument().addDocumentListener(typNAmeListener);
+        //player2nameTxt.getDocument().addDocumentListener(typNAmeListener);
         player1nameTxt.getDocument().putProperty("name", "player1");
         player2nameTxt.getDocument().putProperty("name", "player2");
 
@@ -122,10 +112,14 @@ public class Main extends JFrame {
           @Override
           public void actionPerformed(ActionEvent e) {
               if (e.getActionCommand().equals("start")) {
-                  if (startBtn.isSelected() && checkNames()) {
-                      setVisible(false);
-                      GameLogic gameBoard = new GameLogic(player1name, player2name);
-                      GameGraphic gameGraphic = new GameGraphic(gameBoard);
+                  if (startBtn.isSelected()) {
+                      player1name = player1nameTxt.getText();
+                      player2name = player2nameTxt.getText();
+                      if (checkNames()) {
+                          setVisible(false);
+                          GameLogic gameBoard = new GameLogic(player1name, player2name);
+                          GameGraphic gameGraphic = new GameGraphic(gameBoard);
+                      }
                   }
               }
           }
@@ -136,12 +130,17 @@ public class Main extends JFrame {
     }
 
     private boolean checkNames() {
-        if (player1name.length() < 4)
-            player1nameTxt.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
-        if (player2name.length() < 4)
-            player2nameTxt.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 2));
-        return (player1name.length() >= 4 && player2name.length() >= 4);
+        if (player1name.length() < 4 || player1name.length() > 9) {
+            player1nameTxt.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+            return false;
+        }
+        if (player2name.length() < 4 || player2name.length() > 9) {
+            player2nameTxt.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+            return false;
+        }
+        return true;
     }
+
     public static void main(String[] args) {
 
         new Main();

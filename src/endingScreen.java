@@ -34,15 +34,15 @@ public class endingScreen extends JFrame {
             }
 
             if (player1cards < player2cards) {
-                g.setColor(Color.lightGray);
+                g.setColor(Color.pink);
                 g.setFont(new Font("TimesRoman", Font.PLAIN, 35));
                 g.drawString(gameState.getPlayers(1).getPlayerName() + " won the game!!!", 20, 200);
             } else if (player2cards < player1cards) {
-                g.setColor(Color.lightGray);
+                g.setColor(Color.pink);
                 g.setFont(new Font("TimesRoman", Font.PLAIN, 35));
                 g.drawString(gameState.getPlayers(2).getPlayerName() + " won the game!!!", 20, 200);
             } else {
-                g.setColor(Color.lightGray);
+                g.setColor(Color.pink);
                 g.setFont(new Font("TimesRoman", Font.PLAIN, 35));
                 g.drawString("no one won the game!!! :(", 20, 200);
             }

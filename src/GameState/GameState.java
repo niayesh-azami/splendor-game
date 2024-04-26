@@ -63,6 +63,23 @@ public class GameState {
     }
 
     public void changeTurnSW() {
+        player p = players[turnSW - 1];
+        for (int i = 0; i < prizeClawNo; i++) {
+            prizeClaw card = prizeClaws[i];
+
+            boolean check = true;
+
+            for (int j = 0; j < 5; j++)
+                if (p.getWallet().getSpecialCoinNum(j) < card.getCoins(j))
+                    check = false;
+
+            if (check) {
+                p.addPrizeClaw(card);
+                prizeClaws[i] = prizeClaws[prizeClawNo - 1];
+                prizeClawNo--;
+            }
+        }
+
         if (getPlayers(turnSW).getWallet().getAllCoinsNum() <= 10)
             turnSW = 3 - turnSW;
     }

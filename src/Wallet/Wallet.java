@@ -17,8 +17,6 @@ public class Wallet {
     }
 
     public void minusCoins(int coin, int amount) {
-        if (amount > specialCoins[coin]) {
-            amount -= specialCoins[coin];
             if (amount <= coins[coin]) {
                 coins[coin] -= amount;
                 allCoinsNum -= amount;
@@ -26,7 +24,6 @@ public class Wallet {
                 allCoinsNum -= coins[coin];
                 coins[coin] = 0;
             }
-        }
     }
 
     public int getCoinNum(int coin) {
